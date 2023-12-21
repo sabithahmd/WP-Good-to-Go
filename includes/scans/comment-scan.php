@@ -7,6 +7,7 @@ use WP_Good_To_Go\Scanner\WP_GTG_Scan;
 class Comment_Scan implements WP_GTG_Scan {
 
     public function scan() {
+
       $comment_status = $this->fix_needed();
    
       return [

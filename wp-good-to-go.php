@@ -14,7 +14,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 namespace WP_Good_To_Go;
 
-
+use WP_Good_To_Go\Tools\WPConfigTransformer; 
 
 use WP_Good_To_Go\Scanner\WP_GTG_Scanner;
 
@@ -33,9 +33,19 @@ class WP_Good_To_Go {
 
    private function add_actions() {
       add_action('admin_menu',[$this, 'wpgtg_admin_menu']);
-      add_action( 'admin_footer', [$this, 'admin_styles_scripts']);
       add_action("wp_ajax_scan_action" ,[$this, 'scan_action']);
       add_action("wp_ajax_fix_issue" ,[$this, 'fix_issue']);
+      add_action("admin_enqueue_scripts" ,[$this, 'wpgtc_enqueue_scripts']);
+   }
+
+   function wpgtc_enqueue_scripts() {
+      wp_enqueue_style('style',WPGTG_DIR_URL.'assets/style.css');
+      wp_enqueue_style('wpgtg_script',WPGTG_DIR_URL.'assets/scan.js');
+      wp_enqueue_script( 'wpgtg_script', WPGTG_DIR_URL.'assets/scan.js', array('jquery'), null, true );
+   }
+
+   public function wpgtg_admin_menu() {
+      add_menu_page('WP Good To Go','WP Good To Go', 'manage_options', 'wpgtg', [$this, 'wpgtg_dashboard']);
    }
 
    function scan_action() {
@@ -48,64 +58,7 @@ class WP_Good_To_Go {
       $scanner  = new WP_GTG_Scanner();
       $scanner->fix_scan();
       wp_die();
-    
    }
-  
-
-   public function wpgtg_admin_menu() {
-      add_menu_page('WP Good To Go','WP Good To Go', 'manage_options', 'wpgtg', [$this, 'wpgtg_dashboard']);
-   }
-
-   public function admin_styles_scripts() {
-      ?>
-   <script type="text/javascript" >
-    jQuery(document).ready( function() {
-      jQuery("#scan_btn").click( function(e) {
-         e.preventDefault(); 
-         var data = {
-			   'action': 'scan_action'
-         };
-         jQuery.post(ajaxurl, data, function(response) {
-            jQuery('.js-scan_result_wrapper').html(JSON.parse(response));
-
-            jQuery("#scan_list").click( function(e) {
-               e.preventDefault(); 
-               var formdata = jQuery('form.scan_result_form').serialize();
-               var data = {
-                  'action': 'fix_issue',
-                  'formdata': formdata
-               };
-    
-               jQuery.post(ajaxurl, data, function(response) {
-                  console.log(response);
-               });
-            });
-         });
-      });
-   });
-
-	</script>
-   <style>
-      table.scan_results , table.scan_results td, table.scan_results th {
-         border: 1px solid #8E8988;
-         padding: 7px 15px;
-         text-align: left;
-         font-size: 14px;
-         line-height: 25px;
-      }
-
-      table.scan_results {
-         border-collapse: collapse;
-         border: 1px solid #8E8988;
-         margin-top:30px;
-         margin-bottom: 20px;
-      }
-   </style>
- 
-    <?php 
-    }
-
-  
 
    public function wpgtg_dashboard() {
 
@@ -125,9 +78,7 @@ class WP_Good_To_Go {
 
 }
 
-
-
-function wpgtg_autoloader($class) {;
+function wpgtg_autoloader($class) {
    if (strpos($class, __NAMESPACE__) === 0) {
        $class = str_replace(__NAMESPACE__ . '\\', '', $class);
        $class_file = str_replace('\\', DIRECTORY_SEPARATOR, $class);
@@ -141,4 +92,3 @@ function wpgtg_autoloader($class) {;
 spl_autoload_register(__NAMESPACE__ . '\wpgtg_autoloader');
 
 $wp_good_to_go = new WP_Good_To_Go();
-

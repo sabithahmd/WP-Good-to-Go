@@ -1,15 +1,14 @@
-.urc-card{
-    text-align: center;
-}
-.btn-wp-security{
-    padding: 8px 40px;
-    background-color: #2782ad;
-    color: #fff;
-    border: none;
-}
-.btn-save{
-    padding: 5px 20px;
-    background-color: #2782ad;
-    color: #fff;
-    border: none;
-}
+table.scan_results , table.scan_results td, table.scan_results th {
+    border: 1px solid #8E8988;
+    padding: 7px 15px;
+    text-align: left;
+    font-size: 14px;
+    line-height: 25px;
+ }
+
+ table.scan_results {
+    border-collapse: collapse;
+    border: 1px solid #8E8988;
+    margin-top:30px;
+    margin-bottom: 20px;
+ }

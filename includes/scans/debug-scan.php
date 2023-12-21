@@ -2,6 +2,8 @@
 
 namespace WP_Good_To_Go\Scans;
 
+use WP_Good_To_Go\Tools\WPConfigTransformer;
+
 use WP_Good_To_Go\Scanner\WP_GTG_Scan;
 
 class Debug_Scan implements WP_GTG_Scan {
@@ -22,7 +24,10 @@ class Debug_Scan implements WP_GTG_Scan {
   }
 
   public function fix_action() {
-    ini_set('log_errors', false);
+    $config_transformer = new WPConfigTransformer(ABSPATH.'/wp-config.php' );
+    $config_transformer->update( 'constant', 'WP_DEBUG', 'false', array( 'raw' => true ) );
+    $config_transformer->add( 'constant', 'DEBUG_FIX', 'foo' );
+    $config_transformer->remove( 'constant', 'DEBUG_FIX' );
     return true;
   }
     

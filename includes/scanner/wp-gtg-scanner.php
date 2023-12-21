@@ -26,17 +26,20 @@ class WP_GTG_Scanner {
 
     public function start_scan () {
         $data = [];
-        foreach($this->scans as $value) {
-            $scan_class = '\\WP_Good_To_Go\Scans\\'.$value;
+        foreach($this->scans as $class) {
+            $scan_class = '\\WP_Good_To_Go\Scans\\'.$class;
             $scan = new $scan_class;
             $data[] = $scan->scan();
         }
-        $data = $this->scan_result_form_html($data);
-        echo json_encode($data);
+        //$data = $this->scan_result_form_html($data);
+        $filter_data = array_filter($data, function($scan_result) {
+            return $scan_result['value'];
+        });
+        echo json_encode(array_values($filter_data));
 
     }
 
-    public function fix_scan (){
+    public function fix_scan () {
         parse_str($_POST['formdata'], $formdata);
         $data = [];
         foreach($formdata as $key => $value) {
@@ -47,49 +50,5 @@ class WP_GTG_Scanner {
         }
         echo json_encode($data);
     }
-
-    private function scan_result_form_html($data = []) {
-
-        return '
-            <form action="" method="POST" class="scan_result_form">
-                <table class="scan_results">
-                    <thead>
-                        <tr>
-                            <th>Issues</th>
-                            <th>Solution</th>
-                        </tr>
-                    </thead>
-                    <tbody>'
-                        .$this->get_scan_input_elements($data).
-                    '</tbody>
-                </table> 
-                <input type="submit" name="fix_issues" value="APPLY" id="scan_list" class="button button-primary"/>
-            </form>
-            <div class="scan_response"></div>
-        ';
-
-    }
-    
-    private function get_scan_input_elements($data) {
-        $html = '';
-        foreach ($data as $key => $value) {
-            $hide_option = ($value['value']) ? '':'hidden disabled';
-            $issue = $value['issue'];
-            $name = $value['class'];
-            $label = $value['label'];
-            $html .= "
-            <tr>
-                <td>$issue</td>
-                <td> 
-                    <input $hide_option type='checkbox' name='$name' value='True'/>
-                    <label>$label</label>
-                </td>
-            </tr>
-            ";
-        
-        }
-        return $html;
-    }
-
 }
 
