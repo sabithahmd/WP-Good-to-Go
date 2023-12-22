@@ -33,7 +33,8 @@ class Comment_Scan implements WP_GTG_Scan {
     public function fix_action() {
       global $wpdb;
       $wpdb->query("UPDATE {$wpdb->prefix}posts SET comment_status = 'closed' WHERE post_type = 'post'");
-      return true;
+      return "<p>Turned off Comments</p>";
+   
     }
 
 }

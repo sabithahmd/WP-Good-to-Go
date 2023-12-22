@@ -1,0 +1,36 @@
+<?php
+
+namespace WP_Good_To_Go\Scans;
+
+use WP_Good_To_Go\Scanner\WP_GTG_Scan;
+
+class Xml_Scan implements WP_GTG_Scan {
+
+
+  public function scan() {
+
+      $xmlr_status = $this->fix_needed();
+    
+      return [
+        'class' => 'Xml_Scan',
+        'issue' => $xmlr_status ? 'XML-RPC is enabled' : 'XML-RPC is disabled',
+        'label' => $xmlr_status ? 'Turn off XML-RPC': 'No fix needed',
+        'value' => $xmlr_status
+      ];
+    }
+
+    public function fix_needed() {
+      
+      return true;
+      
+    }
+
+    public function fix_action() {
+       return false;
+    }
+
+
+
+
+
+}

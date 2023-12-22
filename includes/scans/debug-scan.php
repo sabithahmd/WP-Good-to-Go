@@ -28,7 +28,7 @@ class Debug_Scan implements WP_GTG_Scan {
     $config_transformer->update( 'constant', 'WP_DEBUG', 'false', array( 'raw' => true ) );
     $config_transformer->add( 'constant', 'DEBUG_FIX', 'foo' );
     $config_transformer->remove( 'constant', 'DEBUG_FIX' );
-    return true;
+    return "<p>Turned off Debug Mode</p>";
   }
     
 }

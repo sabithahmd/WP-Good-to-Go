@@ -19,7 +19,7 @@ use WP_Good_To_Go\Tools\WPConfigTransformer;
 use WP_Good_To_Go\Scanner\WP_GTG_Scanner;
 
 defined('ABSPATH') || die('you can\'t call me directly');
-define('WPGTG_DIR_URL', plugin_dir_url(__FILE__).'/');
+define('WPGTG_DIR_URL', plugin_dir_url(__FILE__));
 define('WPGTG_DIR_PATH', __DIR__.'/');
 define('WPGTG_VER','1.0.0');
 
